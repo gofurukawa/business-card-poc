@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "card_layout.schema.json",
+  "title": "Business Card Layout Schema",
+  "description": "JSON schema for Japanese business card layout specification",
+  "type": "object",
+  "required": ["card", "elements"],
+  "properties": {
+    "card": {
+      "type": "object",
+      "description": "Card dimensions and background settings",
+      "required": ["width_mm", "height_mm"],
+      "properties": {
+        "width_mm": {
+          "type": "number",
+          "description": "Card width in millimeters",
+          "default": 91
+        },
+        "height_mm": {
+          "type": "number",
+          "description": "Card height in millimeters",
+          "default": 55
+        },
+        "background": {
+          "type": "string",
+          "description": "Background color in hex format",
+          "default": "#FFFFFF",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        }
+      }
+    },
+    "elements": {
+      "type": "array",
+      "description": "Array of elements to render on the card",
+      "items": {
+        "$ref": "#/$defs/textElement"
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Optional metadata about the template",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Template name"
+        },
+        "version": {
+          "type": "string",
+          "description": "Template version"
+        },
+        "description": {
+          "type": "string",
+          "description": "Template description"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "textElement": {
+      "type": "object",
+      "required": ["id", "type", "content", "position", "font"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the element"
+        },
+        "type": {
+          "type": "string",
+          "description": "Element type",
+          "const": "text"
+        },
+        "content": {
+          "type": "string",
+          "description": "Text content, supports {{PLACEHOLDER}} syntax"
+        },
+        "position": {
+          "$ref": "#/$defs/position"
+        },
+        "font": {
+          "$ref": "#/$defs/font"
+        },
+        "align": {
+          "type": "string",
+          "description": "Text alignment",
+          "enum": ["left", "center", "right"],
+          "default": "left"
+        }
+      }
+    },
+    "position": {
+      "type": "object",
+      "required": ["x_mm", "y_mm"],
+      "properties": {
+        "x_mm": {
+          "type": "number",
+          "description": "X coordinate from left edge in millimeters"
+        },
+        "y_mm": {
+          "type": "number",
+          "description": "Y coordinate from top edge in millimeters"
+        }
+      }
+    },
+    "font": {
+      "type": "object",
+      "required": ["category", "size_pt"],
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "Font category",
+          "enum": ["gothic", "mincho"]
+        },
+        "size_pt": {
+          "type": "number",
+          "description": "Font size in points",
+          "minimum": 1
+        },
+        "weight": {
+          "type": "string",
+          "description": "Font weight",
+          "enum": ["light", "regular", "bold"],
+          "default": "regular"
+        },
+        "color": {
+          "type": "string",
+          "description": "Text color in hex format",
+          "default": "#000000",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        }
+      }
+    }
+  }
+}
