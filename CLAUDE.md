@@ -17,6 +17,8 @@ business-card-poc/
 │   └── card-generator/    # 名刺生成スキル
 ├── src/
 │   └── generator.py       # 名刺画像生成エンジン
+├── scripts/
+│   └── backup_version.sh  # バージョン管理付きバックアップスクリプト
 ├── schemas/
 │   └── card_layout.schema.json  # レイアウト JSON スキーマ
 ├── templates/
@@ -121,4 +123,9 @@ python src/generator.py templates/sample_card_template.json -o output/tanaka.png
 # カスタムフォントパスを指定
 python src/generator.py templates/sample_card.json -o output/card.png \
   --font-path /usr/share/fonts/noto-cjk/
+
+# バージョン管理付きでバックアップ（位置調整の反復時に便利）
+./scripts/backup_version.sh templates/analyzed_card.json \
+  --set NAME_KANJI="田中 太郎" \
+  --set COMPANY_NAME="株式会社サンプル"
 ```
