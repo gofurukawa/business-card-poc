@@ -209,6 +209,8 @@ __marimo__/
 # Project specific
 fonts/
 output/
+assets/
+input/
 
 # macOS
 .DS_Store

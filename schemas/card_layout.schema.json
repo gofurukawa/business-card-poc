@@ -33,7 +33,10 @@
       "type": "array",
       "description": "Array of elements to render on the card",
       "items": {
-        "$ref": "#/$defs/textElement"
+        "oneOf": [
+          { "$ref": "#/$defs/textElement" },
+          { "$ref": "#/$defs/imageElement" }
+        ]
       }
     },
     "metadata": {
@@ -87,6 +90,31 @@
         }
       }
     },
+    "imageElement": {
+      "type": "object",
+      "required": ["id", "type", "src", "position"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the element"
+        },
+        "type": {
+          "type": "string",
+          "description": "Element type",
+          "const": "image"
+        },
+        "src": {
+          "type": "string",
+          "description": "Image file path (relative to template or absolute), supports {{PLACEHOLDER}} syntax"
+        },
+        "position": {
+          "$ref": "#/$defs/position"
+        },
+        "size": {
+          "$ref": "#/$defs/size"
+        }
+      }
+    },
     "position": {
       "type": "object",
       "required": ["x_mm", "y_mm"],
@@ -126,6 +154,20 @@
           "description": "Text color in hex format",
           "default": "#000000",
           "pattern": "^#[0-9A-Fa-f]{6}$"
+        }
+      }
+    },
+    "size": {
+      "type": "object",
+      "description": "Image size specification (at least one dimension required)",
+      "properties": {
+        "width_mm": {
+          "type": "number",
+          "description": "Image width in millimeters"
+        },
+        "height_mm": {
+          "type": "number",
+          "description": "Image height in millimeters"
         }
       }
     }

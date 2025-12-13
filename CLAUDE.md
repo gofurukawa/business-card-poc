@@ -22,6 +22,7 @@ business-card-poc/
 ├── templates/
 │   ├── sample_card.json          # サンプル名刺（デフォルト値入り）
 │   └── sample_card_template.json # サンプル名刺（プレースホルダー形式）
+├── assets/                # 画像ファイル格納ディレクトリ（自由に配置可能）
 ├── fonts/                 # フォントファイル格納ディレクトリ
 ├── input/                 # スキャン画像入力用
 └── output/                # 生成画像出力先
@@ -100,6 +101,8 @@ python src/generator.py templates/analyzed_card.json \
 - JSON ファイルは UTF-8 エンコーディング必須
 - プレースホルダー形式: `{{PLACEHOLDER_NAME}}`
 - フォントが見つからない場合はエラーで停止
+- 対応要素タイプ: `text`（テキスト）、`image`（画像）
+- 画像パスはテンプレートファイルからの相対パスまたは絶対パス
 
 ## よく使うコマンド
 

@@ -135,6 +135,65 @@ def substitute_placeholders(text: str, values: dict[str, str]) -> str:
 # ============================================================================
 
 
+def render_image_element(
+    image: Image.Image,
+    element: dict[str, Any],
+    config: CardConfig,
+    placeholders: dict[str, str],
+    base_path: Path | None = None,
+) -> None:
+    """Render an image element onto the card."""
+    # Get image path, supporting placeholders
+    src = substitute_placeholders(element["src"], placeholders)
+
+    # Resolve relative paths
+    img_path = Path(src)
+    if not img_path.is_absolute() and base_path:
+        img_path = base_path / img_path
+
+    if not img_path.exists():
+        print(f"Warning: Image not found: {img_path}", file=sys.stderr)
+        return
+
+    # Load the image
+    element_img = Image.open(img_path)
+
+    # Convert to RGB/RGBA if needed
+    if element_img.mode not in ("RGB", "RGBA"):
+        element_img = element_img.convert("RGBA")
+
+    # Get target size
+    position = element["position"]
+    x_px = config.mm_to_px(position["x_mm"])
+    y_px = config.mm_to_px(position["y_mm"])
+
+    # Resize if dimensions specified
+    size = element.get("size", {})
+    if "width_mm" in size or "height_mm" in size:
+        orig_w, orig_h = element_img.size
+
+        if "width_mm" in size and "height_mm" in size:
+            # Both specified: use exact dimensions
+            new_w = config.mm_to_px(size["width_mm"])
+            new_h = config.mm_to_px(size["height_mm"])
+        elif "width_mm" in size:
+            # Only width: maintain aspect ratio
+            new_w = config.mm_to_px(size["width_mm"])
+            new_h = round(orig_h * new_w / orig_w)
+        else:
+            # Only height: maintain aspect ratio
+            new_h = config.mm_to_px(size["height_mm"])
+            new_w = round(orig_w * new_h / orig_h)
+
+        element_img = element_img.resize((new_w, new_h), Image.Resampling.LANCZOS)
+
+    # Paste the image
+    if element_img.mode == "RGBA":
+        image.paste(element_img, (x_px, y_px), element_img)
+    else:
+        image.paste(element_img, (x_px, y_px))
+
+
 def render_text_element(
     draw: ImageDraw.ImageDraw,
     element: dict[str, Any],
@@ -190,6 +249,7 @@ class CardGenerator:
         layout: dict[str, Any],
         output_path: Path,
         placeholders: dict[str, str] | None = None,
+        base_path: Path | None = None,
     ) -> None:
         """Render layout to PNG image."""
         placeholders = placeholders or {}
@@ -203,7 +263,14 @@ class CardGenerator:
         image = Image.new("RGB", (width_px, height_px), background)
         draw = ImageDraw.Draw(image)
 
-        # Render elements
+        # Render elements (images first, then text on top)
+        for element in layout.get("elements", []):
+            element_type = element.get("type")
+            if element_type == "image":
+                render_image_element(
+                    image, element, self.config, placeholders, base_path
+                )
+
         for element in layout.get("elements", []):
             element_type = element.get("type")
             if element_type == "text":
@@ -268,8 +335,9 @@ def main() -> int:
         generator = CardGenerator(config)
         layout = generator.load_layout(args.template)
         placeholders = parse_set_args(args.set_args)
+        base_path = args.template.parent.resolve()
 
-        generator.render(layout, args.output, placeholders)
+        generator.render(layout, args.output, placeholders, base_path)
         return 0
     except FontNotFoundError as e:
         print(f"Error: {e}", file=sys.stderr)

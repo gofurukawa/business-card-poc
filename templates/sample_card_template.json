@@ -1,8 +1,8 @@
 {
   "metadata": {
     "name": "standard_japanese_business_card_template",
-    "version": "1.0.0",
-    "description": "Standard Japanese business card template with placeholders"
+    "version": "1.1.0",
+    "description": "Standard Japanese business card template with placeholders (image element example included)"
   },
   "card": {
     "width_mm": 91,
@@ -10,6 +10,13 @@
     "background": "#FFFFFF"
   },
   "elements": [
+    {
+      "id": "company_logo",
+      "type": "image",
+      "src": "{{LOGO_PATH}}",
+      "position": { "x_mm": 70, "y_mm": 5 },
+      "size": { "width_mm": 18 }
+    },
     {
       "id": "company_name",
       "type": "text",
