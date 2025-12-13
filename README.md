@@ -27,6 +27,15 @@ pip install -r requirements.txt
 - `NotoSerifJP-Bold.ttf`
 - `NotoSerifJP-Light.ttf`
 
+## テンプレート
+
+2種類のサンプルテンプレートを用意しています：
+
+| ファイル | 説明 |
+|----------|------|
+| `templates/sample_card.json` | デフォルト値入り（そのまま生成可能） |
+| `templates/sample_card_template.json` | プレースホルダー形式（値の指定が必要） |
+
 ## 使い方
 
 ### サンプル名刺の生成
@@ -39,12 +48,19 @@ python src/generator.py templates/sample_card.json -o output/card.png
 
 ### プレースホルダーの置換
 
-テンプレート内の `{{KEY}}` 形式のプレースホルダーを置換して生成できます：
+`sample_card_template.json` は `{{KEY}}` 形式のプレースホルダーを使用しています。`--set` オプションで値を指定して生成できます：
 
 ```bash
-python src/generator.py templates/sample_card.json -o output/custom.png \
+python src/generator.py templates/sample_card_template.json -o output/custom.png \
+  --set COMPANY_NAME="株式会社サンプル" \
+  --set DEPARTMENT="営業部" \
   --set NAME_KANJI="田中 太郎" \
-  --set COMPANY_NAME="株式会社サンプル"
+  --set NAME_ROMAJI="Taro Tanaka" \
+  --set TITLE="部長" \
+  --set POSTAL_CODE="100-0001" \
+  --set ADDRESS="東京都千代田区丸の内1-1-1" \
+  --set PHONE="03-1234-5678" \
+  --set EMAIL="t.tanaka@example.co.jp"
 ```
 
 ### カスタムフォントパスの指定
