@@ -1,0 +1,131 @@
+{
+  "metadata": {
+    "name": "standard_japanese_business_card",
+    "version": "1.0.0",
+    "description": "Standard Japanese business card template"
+  },
+  "card": {
+    "width_mm": 91,
+    "height_mm": 55,
+    "background": "#FFFFFF"
+  },
+  "elements": [
+    {
+      "id": "company_name",
+      "type": "text",
+      "content": "株式会社テクノソリューションズ",
+      "position": { "x_mm": 10, "y_mm": 8 },
+      "font": {
+        "category": "gothic",
+        "size_pt": 9,
+        "weight": "regular",
+        "color": "#333333"
+      },
+      "align": "left"
+    },
+    {
+      "id": "department",
+      "type": "text",
+      "content": "技術開発本部",
+      "position": { "x_mm": 10, "y_mm": 14 },
+      "font": {
+        "category": "gothic",
+        "size_pt": 7,
+        "weight": "light",
+        "color": "#666666"
+      },
+      "align": "left"
+    },
+    {
+      "id": "name_kanji",
+      "type": "text",
+      "content": "山田 花子",
+      "position": { "x_mm": 10, "y_mm": 24 },
+      "font": {
+        "category": "mincho",
+        "size_pt": 14,
+        "weight": "bold",
+        "color": "#000000"
+      },
+      "align": "left"
+    },
+    {
+      "id": "name_romaji",
+      "type": "text",
+      "content": "Hanako Yamada",
+      "position": { "x_mm": 10, "y_mm": 31 },
+      "font": {
+        "category": "gothic",
+        "size_pt": 7,
+        "weight": "regular",
+        "color": "#666666"
+      },
+      "align": "left"
+    },
+    {
+      "id": "title",
+      "type": "text",
+      "content": "シニアエンジニア",
+      "position": { "x_mm": 10, "y_mm": 37 },
+      "font": {
+        "category": "gothic",
+        "size_pt": 8,
+        "weight": "regular",
+        "color": "#333333"
+      },
+      "align": "left"
+    },
+    {
+      "id": "postal_code",
+      "type": "text",
+      "content": "〒100-0005",
+      "position": { "x_mm": 10, "y_mm": 44 },
+      "font": {
+        "category": "gothic",
+        "size_pt": 6,
+        "weight": "regular",
+        "color": "#333333"
+      },
+      "align": "left"
+    },
+    {
+      "id": "address",
+      "type": "text",
+      "content": "東京都千代田区丸の内1-1-1",
+      "position": { "x_mm": 10, "y_mm": 48 },
+      "font": {
+        "category": "gothic",
+        "size_pt": 6,
+        "weight": "regular",
+        "color": "#333333"
+      },
+      "align": "left"
+    },
+    {
+      "id": "phone",
+      "type": "text",
+      "content": "TEL: 03-1234-5678",
+      "position": { "x_mm": 55, "y_mm": 44 },
+      "font": {
+        "category": "gothic",
+        "size_pt": 6,
+        "weight": "regular",
+        "color": "#333333"
+      },
+      "align": "left"
+    },
+    {
+      "id": "email",
+      "type": "text",
+      "content": "h.yamada@example.co.jp",
+      "position": { "x_mm": 55, "y_mm": 48 },
+      "font": {
+        "category": "gothic",
+        "size_pt": 6,
+        "weight": "regular",
+        "color": "#333333"
+      },
+      "align": "left"
+    }
+  ]
+}
