@@ -6,6 +6,7 @@ JSON レイアウト定義から日本語対応の名刺画像（PNG）を生成
 ## 技術スタック
 - Python 3.10+
 - Pillow (PIL Fork) - 画像生成
+- OpenCV - 画像処理（テキスト除去）
 - 日本語フォント: Noto Sans JP (ゴシック) / Noto Serif JP (明朝)
 
 ## ディレクトリ構成
@@ -18,7 +19,8 @@ business-card-poc/
 ├── src/
 │   └── generator.py       # 名刺画像生成エンジン
 ├── scripts/
-│   └── backup_version.sh  # バージョン管理付きバックアップスクリプト
+│   ├── backup_version.sh  # バージョン管理付きバックアップスクリプト
+│   └── remove_text.py     # 名刺画像からテキストを除去して背景画像を生成
 ├── schemas/
 │   └── card_layout.schema.json  # レイアウト JSON スキーマ
 ├── templates/
@@ -128,4 +130,12 @@ python src/generator.py templates/sample_card.json -o output/card.png \
 ./scripts/backup_version.sh templates/analyzed_card.json \
   --set NAME_KANJI="田中 太郎" \
   --set COMPANY_NAME="株式会社サンプル"
+
+# 名刺画像からテキストを除去して背景画像を生成（手動領域指定）
+python scripts/remove_text.py input/card.png -o assets/background.png \
+  --region 0.28,0.08,0.98,0.98
+
+# 名刺画像からテキストを除去（自動検出 + 除外領域）
+python scripts/remove_text.py input/card.png -o assets/background.png \
+  --auto --exclude 0,0,0.28,1.0
 ```
