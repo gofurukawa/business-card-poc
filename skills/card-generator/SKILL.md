@@ -48,6 +48,15 @@ python src/generator.py templates/sample_card.json -o output/card.png \
 python src/generator.py templates/sample_card.json -o output/card.png --dpi 150
 ```
 
+### 背景画像を使用して生成
+
+```bash
+python src/generator.py templates/sample_card_with_background.json -o output/card.png \
+  --set BACKGROUND_IMAGE="../assets/card_background.png" \
+  --set NAME_KANJI="田中 太郎" \
+  --set DEPARTMENT="営業部"
+```
+
 ## CLI オプション一覧
 
 | オプション | 説明 | デフォルト |
@@ -112,7 +121,8 @@ python src/generator.py templates/sample_card.json -o output/card.png --dpi 150
   "card": {
     "width_mm": 91,
     "height_mm": 55,
-    "background": "#FFFFFF"
+    "background": "#FFFFFF",
+    "background_image": "../assets/card_background.png"
   },
   "elements": [
     {
@@ -130,6 +140,25 @@ python src/generator.py templates/sample_card.json -o output/card.png --dpi 150
     }
   ]
 }
+```
+
+## 背景画像
+
+`card` セクションに `background_image` を指定すると、背景として画像を使用できます。
+
+- 画像ファイルパスはテンプレートからの相対パスまたは絶対パス
+- プレースホルダー `{{PLACEHOLDER}}` 形式に対応
+- 背景画像は名刺サイズにリサイズされて配置
+- `background`（背景色）より優先される
+
+### 背景画像を使う場合のテンプレート構成
+
+背景画像に会社ロゴや装飾を含め、テキスト要素のみをテンプレートで配置する方式が推奨されます。
+この方式により、ロゴ画像の切り出しや位置調整の手間を省けます。
+
+```
+assets/card_background.png  ← ロゴ・装飾入りの背景画像
+templates/xxx.json          ← テキスト要素のみを定義
 ```
 
 ## サイズ・位置の目安

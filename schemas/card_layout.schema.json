@@ -26,6 +26,10 @@
           "description": "Background color in hex format",
           "default": "#FFFFFF",
           "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "background_image": {
+          "type": "string",
+          "description": "Background image file path (relative to template or absolute). Overrides background color. Supports {{PLACEHOLDER}} syntax."
         }
       }
     },
