@@ -261,6 +261,24 @@ class CardGenerator:
         background = card_spec.get("background", "#FFFFFF")
 
         image = Image.new("RGB", (width_px, height_px), background)
+
+        # Load background image if specified
+        bg_image_path = card_spec.get("background_image")
+        if bg_image_path:
+            bg_path = Path(substitute_placeholders(bg_image_path, placeholders))
+            if not bg_path.is_absolute() and base_path:
+                bg_path = base_path / bg_path
+
+            if bg_path.exists():
+                bg_img = Image.open(bg_path)
+                if bg_img.mode != "RGB":
+                    bg_img = bg_img.convert("RGB")
+                # Resize to card size
+                bg_img = bg_img.resize((width_px, height_px), Image.Resampling.LANCZOS)
+                image.paste(bg_img, (0, 0))
+            else:
+                print(f"Warning: Background image not found: {bg_path}", file=sys.stderr)
+
         draw = ImageDraw.Draw(image)
 
         # Render elements (images first, then text on top)

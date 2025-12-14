@@ -29,12 +29,13 @@ pip install -r requirements.txt
 
 ## テンプレート
 
-2種類のサンプルテンプレートを用意しています：
+3種類のサンプルテンプレートを用意しています：
 
 | ファイル | 説明 |
 |----------|------|
 | `templates/sample_card.json` | デフォルト値入り（そのまま生成可能） |
 | `templates/sample_card_template.json` | プレースホルダー形式（値の指定が必要） |
+| `templates/sample_card_with_background.json` | 背景画像を使用するテンプレート |
 
 ### 要素タイプ
 
@@ -75,6 +76,27 @@ pip install -r requirements.txt
   - `width_mm` のみ: アスペクト比を維持して幅に合わせる
   - `height_mm` のみ: アスペクト比を維持して高さに合わせる
   - 両方指定: 指定サイズに変形
+
+### 背景画像
+
+`card` セクションに `background_image` を指定すると、背景として画像を使用できます：
+
+```json
+{
+  "card": {
+    "width_mm": 91,
+    "height_mm": 55,
+    "background_image": "../assets/card_background.png"
+  },
+  "elements": [...]
+}
+```
+
+背景画像のプロパティ：
+- `background_image`: 画像ファイルパス（テンプレートからの相対パスまたは絶対パス）
+- 背景画像は名刺サイズにリサイズされて配置されます
+- `background` (背景色) より優先されます
+- プレースホルダー `{{PLACEHOLDER}}` 形式に対応
 
 ## 使い方
 

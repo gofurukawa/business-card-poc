@@ -1,0 +1,118 @@
+{
+  "metadata": {
+    "name": "Sample Card with Background Image",
+    "version": "1.0.0",
+    "description": "背景画像を使用するサンプルテンプレート。テキストのみを配置し、ロゴや装飾は背景画像に含める方式。"
+  },
+  "card": {
+    "width_mm": 91,
+    "height_mm": 55,
+    "background_image": "{{BACKGROUND_IMAGE}}"
+  },
+  "elements": [
+    {
+      "id": "department",
+      "type": "text",
+      "content": "{{DEPARTMENT}}",
+      "position": { "x_mm": 32, "y_mm": 10 },
+      "font": {
+        "category": "gothic",
+        "size_pt": 7,
+        "weight": "regular",
+        "color": "#333333"
+      },
+      "align": "left"
+    },
+    {
+      "id": "title",
+      "type": "text",
+      "content": "{{TITLE}}",
+      "position": { "x_mm": 32, "y_mm": 15 },
+      "font": {
+        "category": "gothic",
+        "size_pt": 7,
+        "weight": "regular",
+        "color": "#333333"
+      },
+      "align": "left"
+    },
+    {
+      "id": "name_kanji",
+      "type": "text",
+      "content": "{{NAME_KANJI}}",
+      "position": { "x_mm": 32, "y_mm": 22 },
+      "font": {
+        "category": "gothic",
+        "size_pt": 14,
+        "weight": "bold",
+        "color": "#1a1a1a"
+      },
+      "align": "left"
+    },
+    {
+      "id": "qualification",
+      "type": "text",
+      "content": "{{QUALIFICATION}}",
+      "position": { "x_mm": 32, "y_mm": 30 },
+      "font": {
+        "category": "gothic",
+        "size_pt": 6,
+        "weight": "regular",
+        "color": "#333333"
+      },
+      "align": "left"
+    },
+    {
+      "id": "branch",
+      "type": "text",
+      "content": "{{BRANCH}}",
+      "position": { "x_mm": 32, "y_mm": 38 },
+      "font": {
+        "category": "gothic",
+        "size_pt": 9,
+        "weight": "bold",
+        "color": "#1a1a1a"
+      },
+      "align": "left"
+    },
+    {
+      "id": "address",
+      "type": "text",
+      "content": "{{POSTAL}} {{ADDRESS}}",
+      "position": { "x_mm": 32, "y_mm": 44 },
+      "font": {
+        "category": "gothic",
+        "size_pt": 6,
+        "weight": "regular",
+        "color": "#333333"
+      },
+      "align": "left"
+    },
+    {
+      "id": "tel",
+      "type": "text",
+      "content": "TEL : {{TEL}}",
+      "position": { "x_mm": 32, "y_mm": 48 },
+      "font": {
+        "category": "gothic",
+        "size_pt": 6,
+        "weight": "regular",
+        "color": "#333333"
+      },
+      "align": "left"
+    },
+    {
+      "id": "fax",
+      "type": "text",
+      "content": "FAX : {{FAX}}",
+      "position": { "x_mm": 32, "y_mm": 52 },
+      "font": {
+        "category": "gothic",
+        "size_pt": 6,
+        "weight": "regular",
+        "color": "#333333"
+      },
+      "align": "left"
+    }
+  ]
+}
