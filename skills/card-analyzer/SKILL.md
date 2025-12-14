@@ -44,7 +44,7 @@ Claude の Vision 機能を使用して名刺画像を解析し、`schemas/card_
 
 ```bash
 # 元画像と生成画像を比較（毎回必ず実行）
-python scripts/measure_positions.py input/元画像.png output/backup/analyzed_card_vXX.png
+python3 scripts/measure_positions.py input/元画像.png output/backup/analyzed_card_vXX.png
 ```
 
 **完了基準**: 以下の条件を満たすまで反復を続ける
@@ -382,10 +382,10 @@ Vision で画像を解析すると、要素の位置を**左上寄りに見積�
 
 ```bash
 # 単一画像の測定
-python scripts/measure_positions.py input/card.png
+python3 scripts/measure_positions.py input/card.png
 
 # 元画像と生成画像を比較
-python scripts/measure_positions.py input/original.png output/generated.png
+python3 scripts/measure_positions.py input/original.png output/generated.png
 ```
 
 出力例:
@@ -488,7 +488,7 @@ Y位置の最大誤差: 0.08mm
   --set EMAIL="yamada@example.com"
 
 # 2. 位置測定（必須）← これを必ず実行
-python scripts/measure_positions.py input/元画像.png output/backup/analyzed_card_v01.png
+python3 scripts/measure_positions.py input/元画像.png output/backup/analyzed_card_v01.png
 ```
 
 **測定結果の読み方**:
@@ -509,7 +509,7 @@ Y位置の最大誤差: 3.1mm  ← この値を確認
 ./scripts/backup_version.sh templates/analyzed_card.json --set ...
 
 # 3. 位置測定（必須）← 改善を数値で確認
-python scripts/measure_positions.py input/元画像.png output/backup/analyzed_card_v02.png
+python3 scripts/measure_positions.py input/元画像.png output/backup/analyzed_card_v02.png
 
 # 4. 誤差が縮小したか確認
 #    - 前回: X誤差 2.5mm, Y誤差 3.1mm
@@ -575,7 +575,7 @@ python scripts/measure_positions.py input/元画像.png output/backup/analyzed_c
 
 ```bash
 # 位置精度を定量測定（毎回必須）
-python scripts/measure_positions.py input/original.png output/backup/analyzed_card_v03.png
+python3 scripts/measure_positions.py input/original.png output/backup/analyzed_card_v03.png
 
 # Mac で2つの画像を並べて視覚比較
 open output/backup/analyzed_card_v02.png output/backup/analyzed_card_v03.png
@@ -604,7 +604,74 @@ open input/original.png output/backup/analyzed_card_v03.png
 
 ---
 
-## 画像要素の切り出し手順
+## 画像要素の処理方式（推奨: 背景画像方式）
+
+名刺画像内のロゴや装飾を扱う方式は2つあります。**位置精度を優先する場合は背景画像方式を推奨**します。
+
+### 方式の比較
+
+| アプローチ | メリット | デメリット |
+|-----------|----------|-----------|
+| **背景画像方式（推奨）** | 位置ズレなし、シンプル、高精度 | ロゴ位置は固定、テキスト配置のみ変更可能 |
+| **画像切り出し方式** | 要素を自由に配置可能 | 切り出し精度・配置位置のズレが発生しやすい |
+
+### どちらを選ぶか
+
+- **テキストのみ変更したい、位置精度を優先** → **背景画像方式（推奨）**
+- **ロゴや装飾の位置を変更したい** → 画像切り出し方式
+
+---
+
+## 背景画像方式（推奨）
+
+テキストを除去して背景画像として使用する方法です。位置精度が高く、シンプルに実装できます。
+
+### 1. 背景画像を生成
+
+`scripts/remove_text.py` を使用してテキスト領域を除去します。
+
+```bash
+# 手動で領域を指定（推奨）
+python3 scripts/remove_text.py input/card.png -o assets/card_background.png \
+  --region 0.28,0.08,0.98,0.98
+
+# 自動検出モード（白背景上のテキストを検出）
+python3 scripts/remove_text.py input/card.png -o assets/card_background.png \
+  --auto --exclude 0,0,0.28,1.0
+```
+
+**オプション:**
+- `--region x1,y1,x2,y2`: 塗りつぶす領域（割合 0.0-1.0）
+- `--auto`: 白背景上のテキストを自動検出
+- `--exclude x1,y1,x2,y2`: 自動検出時に除外する領域（ロゴ等）
+- `--mask PATH`: デバッグ用マスク画像を出力
+
+### 2. JSON で背景画像を指定
+
+```json
+{
+  "card": {
+    "width_mm": 91,
+    "height_mm": 55,
+    "background_image": "../assets/card_background.png"
+  },
+  "elements": [
+    {
+      "id": "name_kanji",
+      "type": "text",
+      "content": "{{NAME_KANJI}}",
+      "position": { "x_mm": 32, "y_mm": 20 },
+      "font": { "category": "gothic", "size_pt": 14, "weight": "bold" }
+    }
+  ]
+}
+```
+
+---
+
+## 画像切り出し方式（代替）
+
+ロゴや装飾の位置を変更したい場合に使用します。
 
 ### Python で切り出し
 
@@ -632,64 +699,3 @@ from PIL import Image
 stripe = Image.new('RGB', (1075, 47), '#1a2e6e')
 stripe.save('assets/bottom_stripe.png')
 ```
-
----
-
-## 代替アプローチ: 背景画像方式
-
-画像切り出しの精度が問題になる場合（位置ズレ、切り出し範囲の誤差など）、**テキストを除去して背景画像として使用する方法**があります。
-
-### 比較
-
-| アプローチ | メリット | デメリット |
-|-----------|----------|-----------|
-| **画像切り出し** (上記) | 要素を自由に配置可能 | 切り出し精度・配置位置のズレが発生しやすい |
-| **背景画像方式** | 位置ズレなし、シンプル | ロゴ位置は固定、テキスト配置のみ変更可能 |
-
-### 使用方法
-
-#### 1. 背景画像を生成
-
-`scripts/remove_text.py` を使用してテキスト領域を除去します。
-
-```bash
-# 手動で領域を指定（推奨）
-python scripts/remove_text.py input/card.png -o assets/card_background.png \
-  --region 0.28,0.08,0.98,0.98
-
-# 自動検出モード（白背景上のテキストを検出）
-python scripts/remove_text.py input/card.png -o assets/card_background.png \
-  --auto --exclude 0,0,0.28,1.0
-```
-
-**オプション:**
-- `--region x1,y1,x2,y2`: 塗りつぶす領域（割合 0.0-1.0）
-- `--auto`: 白背景上のテキストを自動検出
-- `--exclude x1,y1,x2,y2`: 自動検出時に除外する領域（ロゴ等）
-- `--mask PATH`: デバッグ用マスク画像を出力
-
-#### 2. JSON で背景画像を指定
-
-```json
-{
-  "card": {
-    "width_mm": 91,
-    "height_mm": 55,
-    "background_image": "../assets/card_background.png"
-  },
-  "elements": [
-    {
-      "id": "name_kanji",
-      "type": "text",
-      "content": "{{NAME_KANJI}}",
-      "position": { "x_mm": 32, "y_mm": 20 },
-      "font": { "category": "gothic", "size_pt": 14, "weight": "bold" }
-    }
-  ]
-}
-```
-
-### どちらを選ぶか
-
-- **ロゴや装飾の位置を変更したい** → 画像切り出し方式
-- **テキストのみ変更したい、位置精度を優先** → 背景画像方式

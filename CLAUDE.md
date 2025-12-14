@@ -55,7 +55,7 @@ business-card-poc/
                               ↓
 ┌─────────────────────────────────────────────────────────────┐
 │  3. card-generator スキルで PNG 生成                         │
-│     └─ python src/generator.py templates/analyzed_card.json │
+│     └─ python3 src/generator.py templates/analyzed_card.json │
 │        -o output/generated_card.png                         │
 │        --set COMPANY_NAME="..." --set NAME_KANJI="..." ...  │
 └─────────────────────────────────────────────────────────────┘
@@ -87,7 +87,7 @@ business-card-poc/
 #    → card-analyzer スキルに従い JSON を生成
 
 # 3. 生成された JSON から名刺画像を作成
-python src/generator.py templates/analyzed_card.json \
+python3 src/generator.py templates/analyzed_card.json \
   -o output/generated_card.png \
   --set COMPANY_NAME="株式会社サンプル" \
   --set NAME_KANJI="山田 太郎" \
@@ -115,15 +115,15 @@ python src/generator.py templates/analyzed_card.json \
 pip install -r requirements.txt
 
 # 基本的な使い方
-python src/generator.py templates/sample_card.json -o output/card.png
+python3 src/generator.py templates/sample_card.json -o output/card.png
 
 # プレースホルダーを置換して生成
-python src/generator.py templates/sample_card_template.json -o output/tanaka.png \
+python3 src/generator.py templates/sample_card_template.json -o output/tanaka.png \
   --set NAME_KANJI="田中 太郎" \
   --set COMPANY_NAME="株式会社サンプル"
 
 # カスタムフォントパスを指定
-python src/generator.py templates/sample_card.json -o output/card.png \
+python3 src/generator.py templates/sample_card.json -o output/card.png \
   --font-path /usr/share/fonts/noto-cjk/
 
 # バージョン管理付きでバックアップ（位置調整の反復時に便利）
@@ -132,10 +132,10 @@ python src/generator.py templates/sample_card.json -o output/card.png \
   --set COMPANY_NAME="株式会社サンプル"
 
 # 名刺画像からテキストを除去して背景画像を生成（手動領域指定）
-python scripts/remove_text.py input/card.png -o assets/background.png \
+python3 scripts/remove_text.py input/card.png -o assets/background.png \
   --region 0.28,0.08,0.98,0.98
 
 # 名刺画像からテキストを除去（自動検出 + 除外領域）
-python scripts/remove_text.py input/card.png -o assets/background.png \
+python3 scripts/remove_text.py input/card.png -o assets/background.png \
   --auto --exclude 0,0,0.28,1.0
 ```
